@@ -1,12 +1,17 @@
 # dependencies
 node_modules/
 
-# next.js
+# production
+build/
+dist/
+
+# Next.js (for frontend folder)
 .next/
 out/
 
-# production
-build/
+# Tauri
+**/src-tauri/target/
+**/src-tauri/Cargo.lock
 
 # debug
 npm-debug.log*
@@ -17,9 +22,10 @@ yarn-error.log*
 # env files
 .env*
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# OS files
+.DS_Store
+Thumbs.db

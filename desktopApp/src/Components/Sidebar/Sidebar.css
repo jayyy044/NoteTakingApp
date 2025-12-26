@@ -1,0 +1,122 @@
+.sidebar {
+  height: 100vh;
+  background-color: var(--bg-sidebar) ;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  overflow: hidden; 
+  white-space: nowrap; 
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.sidebar.open {
+  width: var(--sidebar-width-open);
+}
+
+.sidebar.closed {
+  width: var(--sidebar-width-closed);
+}
+
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 0.5px solid var(--border-color);
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px; 
+}
+.toggle-btn:hover {
+  color: var(--accent-primary-hover);
+}
+
+.logo-text {
+  margin-left: 15px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.sidebar.closed .logo-text {
+  opacity: 0;
+}
+
+.add-notebooks{
+    padding :10px;
+    border: none;
+    color: white;
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.add-notebooks span{
+    font-size: 0.8rem;
+    color: grey;
+}
+
+
+
+.add-notebooks button{
+    background: none;
+    border: none;
+    color: grey;
+    cursor: pointer;
+}
+.add-notebooks button:hover {
+    color: var(--accent-primary-hover);
+}
+
+
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li a {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  color: white;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.sidebar-nav li a:hover {
+  color: var(--accent-primary-hover);
+}
+
+/* Icons */
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px; /* Keeps icon size stable */
+  margin-right: 15px; /* Spacing between icon and text */
+}
+
+/* Nav Text - fades out when closed */
+.sidebar-nav .text {
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.sidebar.closed .sidebar-nav .text {
+  opacity: 0;
+  pointer-events: none; /* Prevents clicking invisible text */
+}
