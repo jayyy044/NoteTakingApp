@@ -52,30 +52,50 @@
   opacity: 0;
 }
 
-.add-notebooks{
-    padding :10px;
+
+/* --- Notebooks Section --- */
+
+.add-notebooks {
+    padding: 10px 20px; /* Matched padding to your nav links for alignment */
     border: none;
     color: white;
-    align-self: flex-start;
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    
+    /* Animation settings */
+    transition: opacity 0.3s ease, visibility 0.3s;
+    opacity: 1;
+    visibility: visible;
 }
 
-.add-notebooks span{
+/* Hide the entire div when the sidebar is closed */
+.sidebar.closed .add-notebooks {
+    opacity: 0;
+    visibility: hidden;      /* Makes it unclickable and invisible */
+    pointer-events: none;    /* Ensures no accidental clicks */
+    height: 0;               /* Optional: Shinks the height so nav moves up */
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+}
+
+.add-notebooks span {
     font-size: 0.8rem;
     color: grey;
+    white-space: nowrap; /* Keeps the text on one line during transition */
 }
 
-
-
-.add-notebooks button{
+.add-notebooks button {
     background: none;
     border: none;
     color: grey;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
+
 .add-notebooks button:hover {
     color: var(--accent-primary-hover);
 }

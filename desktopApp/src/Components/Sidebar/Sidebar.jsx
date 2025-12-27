@@ -1,13 +1,67 @@
 import React, { useState } from 'react';
 import './Sidebar.css';
+import {createMockNotebooks} from '../Mockdata/mockdata.js';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [notebooks, setNotebooks] = useState(createMockNotebooks());
+  const [currentPageId, setCurrentPageId] = useState(null);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  // Toggle Notebook Open/Closed
+  const onToggleNotebook = (id) => {
+    setNotebooks(notebooks.map(nb => 
+      nb.id === id ? { ...nb, isExpanded: !nb.isExpanded } : nb
+    ));
+  };
+
+  // Toggle Section Open/Closed
+  const onToggleSection = (nbId, secId) => {
+    setNotebooks(notebooks.map(nb => {
+      if (nb.id !== nbId) return nb;
+      return {
+        ...nb,
+        sections: nb.sections.map(sec => 
+          sec.id === secId ? { ...sec, isExpanded: !sec.isExpanded } : sec
+        )
+      };
+    }));
+  };
+
+  const formatTime = (date) => {
+    // Simple helper to match your "1h ago" requirement
+    return "1h ago"; 
+  };
+
+  const ChevronRight = () => (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M9 18l6-6-6-6" />
+    </svg>
+  );
+
+  const Plus = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  );
+
+  const FileText = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14,2 14,8 20,8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+    </svg>
+  );
+
+  const Folder = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+    </svg>
+  );
   return (
     <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
       
@@ -28,38 +82,67 @@ const Sidebar = () => {
         </button>
       </div>
 
-      {/* 2. Navigation Links */}
-      <nav className="sidebar-nav">
-        <ul>
-          <li>
-            <a href="#">
-              <span className="icon">
-                 {/* Home Icon */}
-                 <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <div className="sidebar__content">
+        {notebooks.map((notebook) => (
+          <div key={notebook.id} className="notebook-group">
+            {/* Notebook Row */}
+            <div className="notebook-item" onClick={() => onToggleNotebook(notebook.id)}>
+              <span className={`notebook-item__expand ${notebook.isExpanded ? 'expanded' : ''}`}>
+                <ChevronRight />
               </span>
-              <span className="text">Home</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span className="icon">
-                {/* Analytics Icon */}
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-              </span>
-              <span className="text">Analytics</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span className="icon">
-                {/* Settings Icon */}
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-              </span>
-              <span className="text">Settings</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
+              {/* Forced to red as requested */}
+              <span className="notebook-item__icon" style={{ backgroundColor: 'red' }} />
+              <span className="notebook-item__title">{notebook.title}</span>
+            </div>
+
+            {/* Sections List */}
+            {notebook.isExpanded && (
+              <div className="sections-container">
+                {notebook.sections.map((section) => (
+                  <div key={section.id}>
+                    <div className="section-item" onClick={() => onToggleSection(notebook.id, section.id)}>
+                      <span className={`section-item__expand ${section.isExpanded ? 'expanded' : ''}`}>
+                        <ChevronRight/>
+                      </span>
+                      <span className="section-item__icon"><Folder/></span>
+                      <span className="section-item__title">{section.title}</span>
+                    </div>
+
+                    {/* Pages List */}
+                    {section.isExpanded && (
+                      <div className="pages-container">
+                        {section.pages.map((page) => (
+                          <div 
+                            key={page.id} 
+                            className={`page-item ${currentPageId === page.id ? 'selected' : ''}`}
+                            onClick={() => setCurrentPageId(page.id)}
+                          >
+                            <span className="page-item__icon"><FileText/></span>
+                            <div className="page-item__content">
+                              <div className="page-item__title">{page.title}</div>
+                              <div className="page-item__time">{formatTime(page.lastModified)}</div>
+                            </div>
+                          </div>
+                        ))}
+                        {/* Add Page Button */}
+                        <div className="add-page-btn">
+                          <Plus/>
+                          <span>Add Page</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                
+                {/* Add Section Button (Inside the notebook, after all sections) */}
+                <div className="add-section-btn">
+                  <span>Add Section</span>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
