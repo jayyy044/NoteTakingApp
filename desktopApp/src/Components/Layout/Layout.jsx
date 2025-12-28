@@ -4,10 +4,10 @@ import Sidebar from '../Sidebar/Sidebar.jsx';
 import Toolbar from '../Toolbar/Toolbar.jsx';
 import Canvas from '../Canvas/Canvas.jsx';
 
-const Layout = () => {
+const Layout = ({userData}) => {
   return (
     <div className="layout">
-      <Sidebar/>
+      <Sidebar notebookData={userData}/>
       <main className="layout-main">
         <Toolbar/>
         <Canvas/>

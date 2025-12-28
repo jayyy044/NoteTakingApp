@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Sidebar.css';
 import {createMockNotebooks} from '../Mockdata/mockdata.js';
 
-const Sidebar = () => {
+const Sidebar = ({}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [notebooks, setNotebooks] = useState(createMockNotebooks());
   const [currentPageId, setCurrentPageId] = useState(null);
