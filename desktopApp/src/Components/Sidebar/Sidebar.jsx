@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Sidebar.css';
 import {createMockNotebooks} from '../Mockdata/mockdata.js';
+import { PlusOutlined } from '@ant-design/icons';
 
 const Sidebar = ({}) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -78,7 +79,7 @@ const Sidebar = ({}) => {
       <div className="add-notebooks">
         <span>NOTEBOOKS</span>
         <button className="add-notebook-btn">
-            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <PlusOutlined />
         </button>
       </div>
 

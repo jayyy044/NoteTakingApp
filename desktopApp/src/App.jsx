@@ -5,6 +5,8 @@ import './App.css';
 import { load } from '@tauri-apps/plugin-store';
 import { open } from '@tauri-apps/plugin-dialog';
 import { toast } from 'react-toastify'
+import { join } from '@tauri-apps/api/path';
+import { mkdir, writeTextFile } from '@tauri-apps/plugin-fs';
 
 function App() {
   const [isSetupComplete, setIsSetupComplete] = useState(false);
@@ -32,6 +34,36 @@ function App() {
     checkSetup();
   }, []);
 
+  async function createInitialStructure(folderPath) {
+    try {
+      const notebookPath = await join(folderPath, 'Untitled Notebook');
+      const sectionPath = await join(notebookPath, 'Untitled Section');
+      const pagePath = await join(sectionPath, 'Untitled Page');
+      
+      // Changed from createDir to mkdir
+      await mkdir(pagePath, { recursive: true });
+      
+      const pageJsonPath = await join(pagePath, 'page.json');
+      const initialPage = {
+        id: crypto.randomUUID(),
+        title: 'Untitled Page',
+        created: new Date().toISOString(),
+        lastModified: new Date().toISOString(),
+        text: '',
+        images: [],
+        attachments: [],
+        hasDrawing: false
+      };
+      
+      await writeTextFile(pageJsonPath, JSON.stringify(initialPage, null, 2));
+      
+      console.log('Initial structure created at:', folderPath);
+    } catch (error) {
+      console.error('Error creating initial structure:', error);
+      throw error;
+    }
+  }
+
   async function handleFolderSelection() {
     try {
       console.log('Opening folder selection dialog');
@@ -46,6 +78,8 @@ function App() {
         await store.set('notesFolder', selected);
         await store.save();
         
+        await createInitialStructure(selected);
+
         setNotesFolder(selected);
         setIsSetupComplete(true);
         

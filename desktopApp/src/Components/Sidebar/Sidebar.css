@@ -87,16 +87,25 @@
     white-space: nowrap; /* Keeps the text on one line during transition */
 }
 
-.add-notebooks button {
-    background: none;
-    border: none;
-    color: grey;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
+.add-notebook-btn {
+  background: none;
+  border: none;
+  color: grey; /* Your starting color */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: color var(--transition-normal);
 }
 
-.add-notebooks button:hover {
+.add-notebook-btn .anticon {
+    color: inherit;
+}
+
+.add-notebook-btn:hover {
+    color: var(--accent-primary-hover);
+}
+
+.add-notebook-btn:hover .anticon {
     color: var(--accent-primary-hover);
 }
 
