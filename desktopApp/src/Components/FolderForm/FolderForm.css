@@ -2,10 +2,80 @@
     height: 100%;
     width: 100%;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+
 }
 
 .folder-form-title{
     color: white;
-    font-size: 2rem;
+    font-size: 3.5rem;
     font-weight: 100;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    align-self: flex-start;
+}
+
+.folder-form-title p{
+    margin-left: 15px;
+    letter-spacing: -2px;
+    color: white;
+}
+
+.folder-form-title:first-child{
+    color: var(--accent-primary);
+}
+.folder-body-cont{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;        /* Tells this div to grow and take up all remaining space */
+    width: 100%;
+}
+.folder-form-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 0.5px solid var(--border-color);
+    border-radius: var(--border-rm);
+    padding: 40px;
+    text-align: center;
+    
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    
+    transition: box-shadow var(--transition-normal);
+}
+
+.folder-form-body:hover {
+    box-shadow: 0 5px 10px rgba(253, 253, 253, 0.10);
+}
+
+.folder-form-body p{
+    letter-spacing: -2px;
+    font-size: 2.5rem;
+}
+
+.folder-form-body p span{
+    color: var(--accent-primary);
+}
+
+.folder-form-body p:nth-of-type(1){
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+}
+
+.folder-form-body button{
+    font-size: 7rem;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+    color: var(--accent-primary);
+    transition: color var(--transition-normal);
+}
+.folder-form-body button:hover{
+    color: var(--accent-primary-hover);
 }
