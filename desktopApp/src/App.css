@@ -51,6 +51,6 @@ body,
 body {
   background-color: var(--bg-dark); /* Using your variable! */
   font-family: var(--font-mono);    /* Applying your font! */
-  color: white;                    /* Makes text readable on dark bg */
+  /* color: white;                    */
   -webkit-font-smoothing: antialiased; /* Makes fonts look crisper */
 }

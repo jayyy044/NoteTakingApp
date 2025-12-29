@@ -7,6 +7,7 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { toast } from 'react-toastify'
 import { join } from '@tauri-apps/api/path';
 import { mkdir, writeTextFile } from '@tauri-apps/plugin-fs';
+import { NotebooksProvider } from './Components/Context/notebookcontext.jsx';
 
 function App() {
   const [isSetupComplete, setIsSetupComplete] = useState(false);
@@ -30,6 +31,15 @@ function App() {
     }
   }
 
+  const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
   useEffect(() => {
     checkSetup();
   }, []);
@@ -40,9 +50,19 @@ function App() {
       const sectionPath = await join(notebookPath, 'Untitled Section');
       const pagePath = await join(sectionPath, 'Untitled Page');
       
-      // Changed from createDir to mkdir
       await mkdir(pagePath, { recursive: true });
       
+      const notebookColor = getRandomColor();
+      
+      // CREATE NOTEBOOK.JSON with color (ADD THIS)
+      const notebookJsonPath = await join(notebookPath, 'notebook.json');
+      const notebookData = {
+        color: notebookColor,
+        created: new Date().toISOString()
+      };
+      await writeTextFile(notebookJsonPath, JSON.stringify(notebookData, null, 2));
+      
+      // CREATE PAGE.JSON (remove color from here)
       const pageJsonPath = await join(pagePath, 'page.json');
       const initialPage = {
         id: crypto.randomUUID(),
@@ -52,7 +72,7 @@ function App() {
         text: '',
         images: [],
         attachments: [],
-        hasDrawing: false
+        hasDrawing: false  // Removed color from here
       };
       
       await writeTextFile(pageJsonPath, JSON.stringify(initialPage, null, 2));
@@ -100,7 +120,9 @@ function App() {
   }
   return (<>
     {isSetupComplete ? 
-      <Layout userData={notesFolder}/>
+      <NotebooksProvider notesFolder={notesFolder}>
+        <Layout />
+      </NotebooksProvider>
       :
       <FolderForm folderselectfunc={handleFolderSelection} />
     }
