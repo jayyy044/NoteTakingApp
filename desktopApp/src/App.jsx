@@ -7,14 +7,14 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { toast } from 'react-toastify'
 import { join } from '@tauri-apps/api/path';
 import { mkdir, writeTextFile } from '@tauri-apps/plugin-fs';
-import { NotebooksProvider } from './Components/Context/notebookcontext.jsx';
+import { NotebooksProvider } from './Components/Context/NotebookContext.jsx';
 
 function App() {
   const [isSetupComplete, setIsSetupComplete] = useState(false);
   const [notesFolder, setNotesFolder] = useState(null);
   const [loading, setLoading] = useState(true);
 
-    async function checkSetup() {
+  async function checkSetup() {
     try {
       const store = await load('settings.json', { autoSave: true });
       const folder = await store.get('notesFolder');
@@ -58,11 +58,18 @@ function App() {
       const notebookJsonPath = await join(notebookPath, 'notebook.json');
       const notebookData = {
         color: notebookColor,
-        created: new Date().toISOString()
+        id: crypto.randomUUID(),
+        name: 'Untitled Notebook',
       };
       await writeTextFile(notebookJsonPath, JSON.stringify(notebookData, null, 2));
+
+      const sectionJsonPath = await join(sectionPath, 'section.json');
+      const sectionData = {
+        id: crypto.randomUUID(),
+        name: 'Untitled Section',
+      };
+      await writeTextFile(sectionJsonPath, JSON.stringify(sectionData, null, 3));
       
-      // CREATE PAGE.JSON (remove color from here)
       const pageJsonPath = await join(pagePath, 'page.json');
       const initialPage = {
         id: crypto.randomUUID(),
@@ -72,7 +79,7 @@ function App() {
         text: '',
         images: [],
         attachments: [],
-        hasDrawing: false  // Removed color from here
+        hasDrawing: false  
       };
       
       await writeTextFile(pageJsonPath, JSON.stringify(initialPage, null, 2));

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Sidebar.css';
 import { FiPlus } from "react-icons/fi";
-import { useNotebooks } from '../Context/notebookcontext.jsx';
+import { useNotebooks } from '../Context/NotebookContext.jsx';
 import { FaCircle } from "react-icons/fa6";
 import { FaRegFolderClosed } from "react-icons/fa6";
 import { IoBookOutline } from "react-icons/io5";
