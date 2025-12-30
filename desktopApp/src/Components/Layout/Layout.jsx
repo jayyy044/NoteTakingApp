@@ -9,7 +9,6 @@ const Layout = ({userData}) => {
     <div className="layout">
       <Sidebar notebookData={userData}/>
       <main className="layout-main">
-        <Toolbar/>
         <Canvas/>
       </main>
     </div>

@@ -1,10 +1,231 @@
-.toolbar{
+/* .toolbar{
     height: var(--toolbar-height);
     background-color: var(--bg-toolbar);
     color : white;
     box-shadow: 2px 0 5px rgba(0,0,0,0.1);
     display: flex;
     align-items: center;
-    padding: 0 20px;
+    padding-block: 5px;
+    padding-inline: 15px;
+    gap: 15px;
 
+}
+.selectionbar{
+    border-right: 0.7px solid white;
+    padding-right: 15px;
+    height: 50%;
+    display: flex;
+    align-items: center;
+
+}
+
+.toolbutton{
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.toolbutton:hover{
+    background-color: var(--bg-hover);
+    border-radius: 8px;
+}
+
+.custom-dropdown .ant-dropdown-menu {
+  background-color: var(--bg-toolbar);
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.custom-dropdown .ant-dropdown-menu-item {
+  color: white !important;
+  padding: 10px 16px;
+  border-radius: 4px;
+}
+
+.custom-dropdown .ant-dropdown-menu-item:hover {
+    color: var(--accent-primary-hover) !important;
+    background-color: var(--bg-hover) !important;
+}
+ */
+.toolbar {
+    height: var(--toolbar-height);
+    background-color: var(--bg-toolbar);
+    color : white ;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    padding-block: 5px;
+    padding-inline: 15px;
+    gap: 15px;
+}
+
+.selectionbar{
+    border-right: 0.7px solid white;
+    padding-right: 15px;
+    height: 50%;
+    display: flex;
+    align-items: center;
+}
+
+
+
+.toolbutton {
+  border: 1px solid #555;
+  font-size: 18px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  background-color: transparent;
+  color: white;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.toolbutton:hover {
+  background-color: var(--bg-hover);
+}
+.custom-dropdown .ant-dropdown-menu {
+  background-color: var(--bg-toolbar);
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.custom-dropdown .ant-dropdown-menu-item {
+  color: white !important;
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-size: 18px !important;
+}
+
+.custom-dropdown .ant-dropdown-menu-item:hover {
+    background-color: var(--bg-hover) !important;
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.tool-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.2s;
+}
+
+.tool-dropdown:hover {
+  background-color: #4a4a4a;
+}
+
+.tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background-color: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.tool-btn:hover {
+  background-color: var(--bg-hover);
+}
+
+.tool-btn:active {
+  background-color: #4a4a4a;
+}
+
+.tool-divider {
+  width: 1px;
+  height: 34px;
+  background-color: #555;
+  margin: 0 4px;
+}
+
+
+
+
+
+
+
+.color-picker {
+  padding: 12px;
+  background-color: #2a2a2a;
+  min-width: 240px;
+}
+
+.color-section {
+  margin-bottom: 12px;
+}
+
+.section-label {
+  color: #999;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.theme-colors {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.color-row {
+  display: flex;
+  gap: 2px;
+}
+
+.color-swatch {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #555;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: transform 0.1s;
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+  border-color: #fff;
+}
+
+.standard-colors {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.color-dropdown .ant-dropdown-menu {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 0;
+}
+
+.color-dropdown .ant-dropdown-menu-item {
+  padding: 0;
+}
+
+.color-dropdown .ant-dropdown-menu-item:hover {
+  background-color: transparent;
 }

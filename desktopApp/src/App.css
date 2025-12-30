@@ -24,6 +24,8 @@
   --bg-canvas: #1e1e1e;
   --border-color: #3a3a3a;
 
+  --bg-hover:#3a3a3a;
+
   /* Accents & Styles */
   --accent-primary: #277ca5;
   --accent-primary-hover: #64c2ec;
