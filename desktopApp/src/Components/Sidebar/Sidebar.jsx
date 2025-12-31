@@ -54,7 +54,7 @@ const Sidebar = () => {
 
       <div className="add-notebooks">
         <span>NOTEBOOKS</span>
-        <button className="add-notebook-btn" onClick={addNotebook}>
+        <button className="add-notebook-btn" onClick={() => addNotebook()}>
           <FiPlus />
         </button>
       </div>
@@ -71,11 +71,11 @@ const Sidebar = () => {
               <div className="sections-container">
                 {notebook.sections.map((section) => (
                   <div key={section.id}>
-                    {/* <div className="section-item" onClick={() => toggleSection(notebook.id, section.id)}>
-                      <FaRegFolderClosed style={{color: notebook.color}}/>
-                      <span className="section-item-title">{section.name}</span>
-                    </div> */}
-                    <p className='section-title'>{section.name}</p>
+                    <p className='section-title'
+                      onClick={() => toggleSection(notebook.id, section.id)}
+                      style={{borderColor: `${section.color}`}}>
+                        {section.name}
+                    </p>
  
                     {section.isExpanded && (
                       <div className="pages-container">

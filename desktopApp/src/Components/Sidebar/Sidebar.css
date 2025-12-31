@@ -120,8 +120,9 @@
   padding: 15px;
 
 }
+
 .notebook-cont{
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 .notebook-item{
   display: flex;
@@ -148,7 +149,7 @@
 
 .sections-container{
   margin-left: 15px;
-  margin-top: 5px;
+  margin-top: 8px;
 }
 
 .sidebar.closed .sections-container {
@@ -157,22 +158,19 @@
 
 .sections-container{
   margin-left: 20px;
-}
-
-.section-item{
   display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 5px 0;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .section-title{
   padding-left: 10px;
-  border-left: 3px solid;
-  border-radius: 8px;
+  border-left: 6px solid;
+  border-radius: 5px;
+  margin-left: 4px;
+  cursor: pointer;
+  margin-bottom: 5px;
 }
-
 
 .add-section-btn{
   display: flex;
@@ -184,17 +182,20 @@
   color: var(--accent-primary-hover);
   cursor: pointer;
 }
-.page-item-content{
-  margin-left: 21px;
-  margin-bottom: 5px;
+
+.pages-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 20px;
+  gap: 6px;
 }
+
 
 .add-page-btn{
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-left: 18px;
-  margin-block: 3px;
 }
 
 .add-page-btn:hover {

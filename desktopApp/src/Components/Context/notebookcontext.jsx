@@ -116,7 +116,7 @@
 
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { readDir, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
+import { readDir, readTextFile, writeTextFile, mkdir } from '@tauri-apps/plugin-fs';
 import { join } from '@tauri-apps/api/path';
 
 const NotebookContext = createContext(null);
@@ -127,11 +127,11 @@ export function NotebooksProvider({ notesFolder, children }) {
   const [loading, setLoading] = useState(true);
 
   const getRandomColor = () => {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
+    const random255 = () => Math.floor(Math.random() * 256);
+    const r = random255();
+    const g = random255();
+    const b = random255();
+    const color = `rgb(${r}, ${g}, ${b})`;
     return color;
   };
 
@@ -224,9 +224,47 @@ export function NotebooksProvider({ notesFolder, children }) {
     }
   };
 
-  const addNotebook = async (folderPath) => {
+  const getNextUntitledNotebookName = async (notesFolder) => {
+    const entries = await readDir(notesFolder, { recursive: false });
+
+    let hasBase = false;
+    let maxNumber = 0;
+
+    for (const entry of entries) {
+      if (!entry.isDirectory || !entry.name) continue;
+
+      if (entry.name === "Untitled Notebook") {
+        hasBase = true;
+        continue;
+      }
+
+      const match = entry.name.match(/^Untitled Notebook (\d+)$/);
+      if (match) {
+        const num = parseInt(match[1], 10);
+        maxNumber = Math.max(maxNumber, num);
+      }
+    }
+
+    // No notebooks at all
+    if (!hasBase && maxNumber === 0) {
+      return "Untitled Notebook";
+    }
+
+    // Base exists, but no numbered ones yet
+    if (hasBase && maxNumber === 0) {
+      return "Untitled Notebook 1";
+    }
+
+    // Numbered notebooks exist
+    return `Untitled Notebook ${maxNumber + 1}`;
+  };
+
+
+  const addNotebook = async () => {
     try {
-      const notebookPath = await join(folderPath, 'Untitled Notebook');
+      console.log('Adding new notebook...');
+      const notebookName = await getNextUntitledNotebookName(notesFolder);
+      const notebookPath = await join(notesFolder, notebookName);
       const sectionPath = await join(notebookPath, 'Untitled Section');
       const pagePath = await join(sectionPath, 'Untitled Page');
       
@@ -243,10 +281,13 @@ export function NotebooksProvider({ notesFolder, children }) {
       };
       await writeTextFile(notebookJsonPath, JSON.stringify(notebookData, null, 2));
 
+
+      const sectionColor = getRandomColor();
       const sectionJsonPath = await join(sectionPath, 'section.json');
       const sectionData = {
         id: crypto.randomUUID(),
         name: 'Untitled Section',
+        color: sectionColor,
       };
       await writeTextFile(sectionJsonPath, JSON.stringify(sectionData, null, 3));
       
@@ -263,8 +304,37 @@ export function NotebooksProvider({ notesFolder, children }) {
       };
       
       await writeTextFile(pageJsonPath, JSON.stringify(initialPage, null, 2));
+      // await loadNotebooks();
+
+      setNotebookData(prev => [
+        ...prev,
+        {
+          id: notebookData.id,
+          name: notebookName,
+          color: notebookColor,
+          path: notebookPath,
+          isExpanded: true,
+          sections: [
+            {
+              id: sectionData.id,
+              name: 'Untitled Section',
+              isExpanded: true,
+              color: sectionColor,
+            }
+          ],
+          pages: {
+            'Untitled Section': [
+              {
+                id: initialPage.id,
+                title: 'Untitled Page',
+                pageName: 'Untitled Page',
+              }
+            ]
+          }
+        }
+      ]);
       
-      console.log('New notebook created at :', folderPath);
+      console.log('New notebook created at :', notebookPath);
     } catch (error) {
       console.error('Error creating new notebook:', error);
       throw error;
