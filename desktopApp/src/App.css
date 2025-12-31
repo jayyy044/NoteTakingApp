@@ -13,7 +13,7 @@
   --font-mono: var(--font-geist-mono);
 
   /* Sidebar */
-  --sidebar-width-open: 250px;
+  --sidebar-width-open: 275px;
   --sidebar-width-closed: 70px;
   
   /* Layout & Colors */
@@ -38,7 +38,8 @@
   
   
   --bg-color:rgb(22, 22, 22);
-  --bg-lighter:#1c1c1c;
+  --bg-lighter:rgb(28, 28, 28);
+  --bg-lighter-hover: rgb(38, 38, 38);
 }
 
 /* 3. Global Reset */
