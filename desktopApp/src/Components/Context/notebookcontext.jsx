@@ -160,6 +160,8 @@ export function NotebooksProvider({ notesFolder, children }) {
           if (parsedNotebookContent.color) {
             currentnotebook.color = parsedNotebookContent.color;
           }
+
+          currentnotebook.id = parsedNotebookContent.id;
         } catch (err) {
           console.error(`Failed to read notebook.json for ${notebook.name}: `, err);
         }
@@ -169,15 +171,27 @@ export function NotebooksProvider({ notesFolder, children }) {
           if (!sectionEntry.isDirectory) continue;
 
           const sectionName = sectionEntry.name;
-
-          currentnotebook.sections.push({
-            name: sectionName,
-            isExpanded: false,
-          });
-          currentnotebook.pages[sectionName] = [];
-
           const sectionPath = await join(notebookPath, sectionName);
+          try {
+            const sectionJsonPath = await join(sectionPath, 'section.json');
+            const sectionJsonContent = await readTextFile(sectionJsonPath);
+            const parsedSectionContent = JSON.parse(sectionJsonContent);
+
+
+            currentnotebook.sections.push({
+              name: sectionName,
+              isExpanded: false,
+              id: parsedSectionContent.id,
+              color: parsedSectionContent.color
+            });
+          } catch (err) {
+            console.error(`Failed to read section.json for ${sectionName}: `, err);
+          }
+          
+
+
           const pageEntries = await readDir(sectionPath);
+          currentnotebook.pages[sectionName] = [];
 
           for (const pageEntry of pageEntries) {
             if (!pageEntry.isDirectory) continue;
@@ -210,7 +224,7 @@ export function NotebooksProvider({ notesFolder, children }) {
     }
   };
 
-  const createNotebook = async (folderPath) => {
+  const addNotebook = async (folderPath) => {
     try {
       const notebookPath = await join(folderPath, 'Untitled Notebook');
       const sectionPath = await join(notebookPath, 'Untitled Section');
@@ -257,6 +271,37 @@ export function NotebooksProvider({ notesFolder, children }) {
     }
   }
 
+  const toggleNotebook = (notebookId) => {
+    setNotebookData(prevData => 
+      prevData.map(notebook => 
+        notebook.id === notebookId 
+          ? { ...notebook, isExpanded: !notebook.isExpanded } 
+          : notebook
+      )
+    );
+  };
+
+  const toggleSection = (notebookId, sectionId) => {
+    setNotebookData(prevNotebooks => 
+      prevNotebooks.map(notebook => {
+        // 1. Find the target notebook
+        if (notebook.id === notebookId) {
+          return {
+            ...notebook,
+            // 2. Map through sections to find the target section
+            sections: notebook.sections.map(section => 
+              section.id === sectionId 
+                ? { ...section, isExpanded: !section.isExpanded } 
+                : section
+            )
+          };
+        }
+        // 3. Return unchanged notebooks
+        return notebook;
+      })
+    );
+  };
+
   useEffect(() => {
     if (!notesFolder) return;
     loadNotebooks();
@@ -270,6 +315,9 @@ export function NotebooksProvider({ notesFolder, children }) {
         currentPageId,
         setCurrentPageId,
         loading,
+        toggleNotebook,
+        toggleSection,
+        addNotebook,
         reloadNotebooks: loadNotebooks,
       }}
     >

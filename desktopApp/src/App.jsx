@@ -63,10 +63,13 @@ function App() {
       };
       await writeTextFile(notebookJsonPath, JSON.stringify(notebookData, null, 2));
 
+      const sectionColor = getRandomColor();
+
       const sectionJsonPath = await join(sectionPath, 'section.json');
       const sectionData = {
         id: crypto.randomUUID(),
         name: 'Untitled Section',
+        color: sectionColor,
       };
       await writeTextFile(sectionJsonPath, JSON.stringify(sectionData, null, 3));
       

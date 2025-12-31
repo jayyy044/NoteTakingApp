@@ -1,13 +1,14 @@
 .sidebar {
   height: 100vh;
-  background-color: var(--bg-sidebar) ;
+  background-color: var(--bg-lighter);
   color: white;
   display: flex;
   flex-direction: column;
-  transition: width 0.3s ease;
+  transition: width 0.5s ease;
   overflow: hidden; 
   white-space: nowrap; 
   box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  border-radius: 5px;
 }
 
 .sidebar.open {
@@ -46,72 +47,78 @@
   font-weight: bold;
   font-size: 1.2rem;
   opacity: 1;
-  transition: opacity 0.3s;
+  transition: opacity 0.5s;
+  font-style: italic;
 }
+
 
 .sidebar.closed .logo-text {
   opacity: 0;
 }
 
-
-/* --- Notebooks Section --- */
-
-.add-notebooks {
-    padding: 10px 20px; /* Matched padding to your nav links for alignment */
-    border: none;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    
-    /* Animation settings */
-    transition: opacity 0.3s ease, visibility 0.3s;
-    opacity: 1;
-    visibility: visible;
+.loading-notebooks {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 1;
+  padding: 20px;
+  color: grey;
 }
 
-/* Hide the entire div when the sidebar is closed */
+
+.add-notebooks {
+  padding: 10px 20px; 
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  
+  transition: opacity 0.5s ease, visibility 0.5s;
+  opacity: 1;
+  visibility: visible;
+}
+
 .sidebar.closed .add-notebooks {
-    opacity: 0;
-    visibility: hidden;      /* Makes it unclickable and invisible */
-    pointer-events: none;    /* Ensures no accidental clicks */
-    height: 0;               /* Optional: Shinks the height so nav moves up */
-    padding-top: 0;
-    padding-bottom: 0;
-    overflow: hidden;
+  opacity: 0;
+  visibility: hidden;      
+  pointer-events: none;    
+  height: 0;               
+  padding-top: 0;
+  padding-bottom: 0;
+  overflow: hidden;
 }
 
 .add-notebooks span {
-    font-size: 0.8rem;
-    color: grey;
-    white-space: nowrap; /* Keeps the text on one line during transition */
+  font-size: 0.8rem;
+  white-space: nowrap; 
+  transition: color 0.3s ease;
 }
 
 .add-notebook-btn {
   background: none;
   border: none;
-  color: grey; /* Your starting color */
+  color: white;
   cursor: pointer;
   display: flex;
   align-items: center;
-  transition: color var(--transition-normal);
-}
-
-.add-notebook-btn .anticon {
-    color: inherit;
+  transition: color 0.3s ease;
 }
 
 .add-notebook-btn:hover {
+  color: var(--accent-primary-hover);
+}
+
+.add-notebooks:has(.add-notebook-btn:hover) span {
     color: var(--accent-primary-hover);
 }
 
-.add-notebook-btn:hover .anticon {
-    color: var(--accent-primary-hover);
-}
+
 
 .notebooks-container{
   padding: 15px;
+
 }
 .notebook-cont{
   margin-bottom: 5px;
@@ -124,7 +131,11 @@
 }
 
 .notebook-item-title{
-  margin-left: 5px;
+  margin-left: 8px;
+}
+
+.sidebar.open .notebook-item {
+  padding-left: 10px;
 }
 
 .sidebar.closed .notebook-item {
@@ -144,16 +155,26 @@
   display: none;
 }
 
+.sections-container{
+  margin-left: 20px;
+}
+
 .section-item{
   display: flex;
   align-items: center;
   cursor: pointer;
   padding: 5px 0;
-  gap: 5px;
+  gap: 8px;
 }
+
+.section-title{
+  padding-left: 10px;
+  border-left: 3px solid;
+  border-radius: 8px;
+}
+
+
 .add-section-btn{
-  margin-left: 0px;
-  margin-top: 0px;
   display: flex;
   align-items: center;
   gap: 5px;

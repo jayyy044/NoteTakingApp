@@ -19,6 +19,7 @@
   /* Layout & Colors */
   --toolbar-height: 68px;
   --bg-dark: #1a1a1a;
+  
   --bg-sidebar: #252525;
   --bg-toolbar: #2a2a2a;
   --bg-canvas: #1e1e1e;
@@ -27,10 +28,15 @@
   --bg-hover:#3a3a3a;
 
   /* Accents & Styles */
-  --accent-primary: #277ca5;
-  --accent-primary-hover: #64c2ec;
+  --accent-primary: #336bfd;
+  --accent-primary-hover: #4b7dfa;
   --border-rm: 15px;
   --transition-normal: 0.3s ease;
+  
+  
+  
+  --bg-color:#161616;
+  --bg-lighter:#1c1c1c;
 }
 
 /* 3. Global Reset */
@@ -51,7 +57,6 @@ body,
 
 /* 5. App-Wide Styles */
 body {
-  background-color: var(--bg-dark); /* Using your variable! */
   font-family: var(--font-mono);    /* Applying your font! */
   /* color: white;                    */
   -webkit-font-smoothing: antialiased; /* Makes fonts look crisper */

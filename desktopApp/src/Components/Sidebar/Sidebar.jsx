@@ -5,18 +5,20 @@ import { useNotebooks } from '../Context/NotebookContext.jsx';
 import { FaCircle } from "react-icons/fa6";
 import { FaRegFolderClosed } from "react-icons/fa6";
 import { IoBookOutline } from "react-icons/io5";
+import Loader from '../Loader/Loader.jsx';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { notebooks, 
-          currentPageId, 
-          setCurrentPageId, 
-          toggleNotebook, 
-          toggleSection, 
-          loading, 
-          addNotebook,
-          addSection,
-          addPage } = useNotebooks();
+  const {         
+        notesFolder,
+        notebookData,
+        currentPageId,
+        setCurrentPageId,
+        loading,
+        toggleNotebook,
+        toggleSection,
+        addNotebook,
+        reloadNotebooks } = useNotebooks();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -34,9 +36,9 @@ const Sidebar = () => {
           <button className="toggle-btn" onClick={toggleSidebar}>
             <IoBookOutline />
           </button>
-          <span className="logo-text">Note Flow</span>
+          <p className='logo-text'>Note Flow</p>
         </div>
-        <div className="loading-notebooks">Loading notebooks...</div>
+        <div className="loading-notebooks"><Loader h={30} w={30}/></div>
       </div>
     );
   }
@@ -58,25 +60,26 @@ const Sidebar = () => {
       </div>
 
       <div className="notebooks-container">
-        {notebooks.map((notebook) => (
+        {notebookData.map((notebook) => (
           <div key={notebook.id} className='notebook-cont'>
             <div className="notebook-item" onClick={() => toggleNotebook(notebook.id)}>
               <FaCircle className="notebook-circle" style={{ color: notebook.color}} />
-              <span className="notebook-item-title">{notebook.title}</span>
-            </div>
+              <span className="notebook-item-title">{notebook.name}</span>
+            </div> 
 
             {notebook.isExpanded && (
               <div className="sections-container">
                 {notebook.sections.map((section) => (
                   <div key={section.id}>
-                    <div className="section-item" onClick={() => toggleSection(notebook.id, section.id)}>
+                    {/* <div className="section-item" onClick={() => toggleSection(notebook.id, section.id)}>
                       <FaRegFolderClosed style={{color: notebook.color}}/>
-                      <span className="section-item-title">{section.title}</span>
-                    </div>
-
+                      <span className="section-item-title">{section.name}</span>
+                    </div> */}
+                    <p className='section-title'>{section.name}</p>
+ 
                     {section.isExpanded && (
                       <div className="pages-container">
-                        {section.pages.map((page) => (
+                        {(notebook.pages[section.name] || []).map((page) => (
                           <div 
                             key={page.id} 
                             className={`page-item ${currentPageId === page.id ? 'selected' : ''}`}
@@ -104,7 +107,7 @@ const Sidebar = () => {
             )}
           </div>
         ))}
-      </div>
+      </div> 
     </div>
   );
 };
