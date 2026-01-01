@@ -9,6 +9,7 @@
   white-space: nowrap; 
   box-shadow: 2px 0 5px rgba(0,0,0,0.1);
   border-radius: 5px;
+
 }
 
 .sidebar.open {
@@ -148,6 +149,14 @@
   font-size: 1.1rem;
 }
 
+.rename-input{
+  margin-left: 8px;
+  font-size: 0.8rem;
+  background-color: transparent;
+  padding: 5px;
+  color: white;
+}
+
 
 .sidebar.closed .notebook-item {
   justify-content: center;
@@ -208,6 +217,12 @@
 
 }
 
+.rename-input-section{
+  color: white;
+  background-color: transparent;
+  padding-block: 3px;
+}
+
 .add-section-btn{
   display: flex;
   align-items: center;
@@ -250,6 +265,12 @@
 
 .page-item-content p{
   color: rgb(220, 220, 220);
+}
+
+.rename-input-page{
+  color: white;
+  background-color: transparent;
+  padding-block: 3px;
 }
 
 .add-page-btn{

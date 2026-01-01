@@ -13,12 +13,11 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [contextMenu, setContextMenu] = useState(null);
   const [rename, setRename] = useState({
-    notebook: false,
-    section: false,
-    page: false
+    notebook: null,
+    section: null,
+    page: null
   })
   const {         
-        notesFolder,
         notebookData,
         currentPageId,
         setCurrentPageId,
@@ -28,7 +27,13 @@ const Sidebar = () => {
         addNotebook,
         addSection,
         addPage,
-        reloadNotebooks } = useNotebooks();
+        renameNotebook,
+        renameSection,
+        renamePage,
+        deleteNotebook,
+        deleteSection,
+        deletePage,
+        } = useNotebooks();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -83,9 +88,15 @@ const Sidebar = () => {
     };
   }, [contextMenu]);
 
-  const handleRename = async () =>{
-
-  }
+  const handleRename = (notebookId = null, sectionId = null, pageId = null, newName) => {
+    if (notebookId && !sectionId && !pageId) {
+      renameNotebook(notebookId, newName);
+    } else if (notebookId && sectionId && !pageId) {
+      renameSection(notebookId, sectionId, newName);
+    } else if (notebookId && sectionId && pageId) {
+      renamePage(notebookId, sectionId, pageId, newName);
+    }
+  };
 
 
   if (loading) {
@@ -130,8 +141,8 @@ const Sidebar = () => {
           {contextMenu.type === 'notebook' && (
             <>
               <div onClick={() => addSection(contextMenu.data.id)}>Add Section</div>
-              <div >Rename Notebook</div>
-              <div>Delete Notebook</div>
+              <div onClick={() => setRename(prev => ({ ...prev, notebook: contextMenu.data.id }))} >Rename Notebook</div>
+              <div onClick={() => deleteNotebook(contextMenu.data.id)}>Delete Notebook</div>
             </>
           )}
 
@@ -143,15 +154,27 @@ const Sidebar = () => {
               )}>
                 Add Page
               </div>
-              <div>Rename Section</div>
-              <div>Delete Section</div>
+              <div 
+                onClick={() => 
+                  setRename(prev => ({...prev, 
+                    section: contextMenu.data.section.id
+                  }))}
+              >Rename Section</div>
+              <div onClick={() => deleteSection(contextMenu.data.notebookId, contextMenu.data.section.id)}>Delete Section</div>
             </>
           )}
 
           {contextMenu.type === 'page' && (
             <>
-              <div>Rename Page</div>
-              <div>Delete Page</div>
+              <div onClick={() => setRename(prev => ({...prev, page: contextMenu.data.page.id }))}>Rename Page</div>
+              <div
+                onClick={() =>
+                  deletePage(
+                    contextMenu.data.notebookId,
+                    contextMenu.data.sectionId,
+                    contextMenu.data.page.id
+                  )}
+              >Delete Page</div>
             </>
           )}
         </div>
@@ -167,7 +190,30 @@ const Sidebar = () => {
                   <FaChevronRight />
                 </span>
               <FaCircle className="notebook-circle" style={{ color: notebook.color}} />
-              <span className="notebook-item-title">{notebook.name}</span>
+                {rename.notebook === notebook.id ? (
+                  <input
+                    autoFocus
+                    className="rename-input"
+                    defaultValue={notebook.name}
+                    // "onBlur" triggers when the user clicks anywhere else
+                    onBlur={() => setRename(prev => ({ ...prev, notebook: null, section: null }))}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleRename(notebook.id, null, null, e.target.value);
+                        setRename(prev => ({ ...prev, notebook: null }));
+                      }
+                      if (e.key === 'Escape') {
+                        setRename(prev => ({ ...prev, notebook: null }));
+                      }
+                    }}
+                    // Stop click from bubbling up to the notebook toggle function
+                    onClick={(e) => e.stopPropagation()} 
+                  />
+                ) : (
+                  <p className="notebook-item-title">
+                    {notebook.name}
+                  </p>
+                )}
             </div> 
 
             {notebook.isExpanded && (
@@ -176,30 +222,72 @@ const Sidebar = () => {
                   <div key={section.id}>
                     <div className="section-header" 
                       onClick={() => toggleSection(notebook.id, section.id)}
-                      onContextMenu={(e) => openContextMenu(e, 'section', { notebookId: notebook.id, section })}
+                      onContextMenu={(e) => openContextMenu(e, 'section', { notebookId : notebook.id, section})}
                       >
                       <span className={`section-chevron ${section.isExpanded ? 'expanded' : ''}`}>
                         <FaChevronRight />
                       </span>
                       <CiFolderOn style={{color: `${section.color}`}}/>
-                      <p className='section-title'>
-                        {section.name}
-                      </p>
+                        {(rename.section === section.id) ? (
+                          <input
+                            autoFocus
+                            className="rename-input-section"
+                            defaultValue={section.name}
+                            // "onBlur" triggers when the user clicks anywhere else
+                            onBlur={() => setRename({ notebook: null, section: null, page: null })}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                handleRename(notebook.id, section.id, null, e.target.value);
+                                setRename({ notebook: null, section: null, page: null });
+                              }
+                              if (e.key === 'Escape') {
+                                setRename({ notebook: null, section: null, page: null });
+                              }
+                            }}
+                            // Stop click from bubbling up to the notebook toggle function
+                            onClick={(e) => e.stopPropagation()} 
+                          />
+                        ) : (
+                          <p className="section-title">
+                            {section.name}
+                          </p>
+                        )}
                     </div>
                     
  
                     {section.isExpanded && (
                       <div className="pages-container">
-                        {(notebook.pages[section.name] || []).map((page) => (
+                        {(notebook.pages[section.id] || []).map((page) => (
                           <div 
                             key={page.id} 
                             className={`page-item ${currentPageId === page.id ? 'selected' : ''}`}
                             onClick={() => setCurrentPageId(page.id)}
-                            onContextMenu={(e) => openContextMenu(e, 'page', { notebookId: notebook.id, sectionId: section.id, page })}
+                            onContextMenu={(e) => openContextMenu(e, 'page', {notebookId: notebook.id, sectionId: section.id, page})}
                           >
                             <div className="page-item-content">
                               <FiFileText/>
-                              <p >{page.title}</p>
+                              {(rename.page === page.id) ? (
+                                <input
+                                  autoFocus
+                                  className="rename-input-page"
+                                  defaultValue={page.title}
+                                  // "onBlur" triggers when the user clicks anywhere else
+                                  onBlur={() => setRename({ notebook: null, section: null, page: null })}
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      handleRename(notebook.id, section.id, page.id, e.target.value);
+                                      setRename({ notebook: null, section: null, page: null });
+                                    }
+                                    if (e.key === 'Escape') {
+                                      setRename({ notebook: null, section: null, page: null });
+                                    }
+                                  }}
+                                  // Stop click from bubbling up to the notebook toggle function
+                                  onClick={(e) => e.stopPropagation()} 
+                                />
+                              ) : (
+                                <p >{page.title}</p>
+                              )}
                             </div>
                           </div>
                         ))}
