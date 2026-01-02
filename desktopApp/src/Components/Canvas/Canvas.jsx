@@ -637,11 +637,443 @@
 
 // export default Canvas;
 
-// // import React from 'react'
+// import { useState, useRef } from 'react'
+// import './Canvas.css'
+// import Toolbar from '../Toolbar/Toolbar'
+// import { useCanvasResize } from '../../Hooks/useCanvasResize'
+
+// const Canvas = () => {
+//   const [viewMode, setViewMode] = useState('');
+//   const containerRef = useRef(null);
+//   const [boxes, setBoxes] = useState([]);
+//   const canvasSize = useCanvasResize(containerRef, boxes, 250)
+
+//   const handleDoubleClick = (e) => {
+//     const container = containerRef.current;
+//     const rect = container.getBoundingClientRect();
+    
+//     const clickX = e.clientX - rect.left + container.scrollLeft;
+//     const clickY = e.clientY - rect.top + container.scrollTop;
+    
+//     const x = Math.max(0, clickX - 50);
+//     const y = Math.max(0, clickY - 50);
+    
+//     const newBox = {
+//       id: Date.now(),
+//       x: x,
+//       y: y,
+//       width: 100,
+//       height: 100,
+//       color: `hsl(${Math.random() * 360}, 70%, 60%)`
+//     };
+    
+//     setBoxes(prev => [...prev, newBox]);
+//   };
+
+//   return (
+//     <div className="canvas-container">
+//       <Toolbar onViewChange={setViewMode}/>
+//       <div
+//         ref={containerRef}
+//         className="drawing-canvas-wrapper"
+//         onDoubleClick={handleDoubleClick}
+//       >
+//         <div 
+//           className={`drawing-canvas ${viewMode}`}
+//           style={{
+//             width: `${canvasSize.width}px`,
+//             height: `${canvasSize.height}px`,
+//             position: 'relative'
+//           }}
+//         >
+//           {boxes.map(box => (
+//             <div
+//               key={box.id}
+//               style={{
+//                 position: 'absolute',
+//                 left: `${box.x}px`,
+//                 top: `${box.y}px`,
+//                 width: `${box.width}px`,
+//                 height: `${box.height}px`,
+//                 backgroundColor: box.color,
+//                 border: '2px solid rgba(255, 255, 255, 0.3)',
+//                 borderRadius: '8px',
+//                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+//               }}
+//             />
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+// export default Canvas
+
+
+// import { useState, useRef, useEffect } from 'react'
+// import './Canvas.css'
+// import Toolbar from '../Toolbar/Toolbar'
+// import { useCanvasResize } from '../../Hooks/useCanvasResize'
+
+// const Canvas = () => {
+//   const [viewMode, setViewMode] = useState('');
+//   const containerRef = useRef(null);
+//   const [textBoxes, setTextBoxes] = useState([]);
+//   const [selectedBox, setSelectedBox] = useState(null);
+//   const [resizing, setResizing] = useState(null);
+//   const [dragging, setDragging] = useState(null);
+//   const canvasSize = useCanvasResize(containerRef, textBoxes, 250);
+
+//   const handleDoubleClick = (e) => {
+//     e.preventDefault();
+//     e.stopPropagation();
+//     const container = containerRef.current;
+//     const rect = container.getBoundingClientRect();
+    
+//     const clickX = e.clientX - rect.left + container.scrollLeft;
+//     const clickY = e.clientY - rect.top + container.scrollTop;
+    
+//     const newBox = {
+//       id: Date.now(),
+//       x: clickX,
+//       y: clickY,
+//       width: 200,
+//       height: 100,
+//       text: ''
+//     };
+    
+//     setTextBoxes(prev => [...prev, newBox]);
+//     setSelectedBox(newBox.id);
+//   };
+
+//   const handleTextChange = (id, newText) => {
+//     setTextBoxes(prev => prev.map(box =>
+//       box.id === id ? { ...box, text: newText } : box
+//     ));
+//   };
+
+//   // Drag handlers
+//   const handleDragStart = (e, id) => {
+//     // Don't start drag if clicking on textarea or resize handle
+//     if (e.target.tagName === 'TEXTAREA' || e.target.classList.contains('resize-handle')) {
+//       return;
+//     }
+    
+//     e.stopPropagation();
+//     const box = textBoxes.find(b => b.id === id);
+//     if (!box) return;
+
+//     setDragging({
+//       id,
+//       startX: e.clientX,
+//       startY: e.clientY,
+//       originalX: box.x,
+//       originalY: box.y
+//     });
+//   };
+
+//   const handleMouseMove = (e) => {
+//     // Handle resizing
+//     if (resizing) {
+//       const deltaX = e.clientX - resizing.startX;
+//       const deltaY = e.clientY - resizing.startY;
+
+//       setTextBoxes(prev => prev.map(box => {
+//         if (box.id !== resizing.id) return box;
+
+//         let newWidth = box.width;
+//         let newHeight = box.height;
+//         let newX = box.x;
+//         let newY = box.y;
+
+//         switch (resizing.direction) {
+//           case 'se':
+//             newWidth = Math.max(100, box.width + deltaX);
+//             newHeight = Math.max(50, box.height + deltaY);
+//             break;
+//           case 'sw':
+//             newWidth = Math.max(100, box.width - deltaX);
+//             newHeight = Math.max(50, box.height + deltaY);
+//             newX = box.x + deltaX;
+//             break;
+//           case 'ne':
+//             newWidth = Math.max(100, box.width + deltaX);
+//             newHeight = Math.max(50, box.height - deltaY);
+//             newY = box.y + deltaY;
+//             break;
+//           case 'nw':
+//             newWidth = Math.max(100, box.width - deltaX);
+//             newHeight = Math.max(50, box.height - deltaY);
+//             newX = box.x + deltaX;
+//             newY = box.y + deltaY;
+//             break;
+//         }
+
+//         return { ...box, width: newWidth, height: newHeight, x: newX, y: newY };
+//       }));
+
+//       setResizing({ ...resizing, startX: e.clientX, startY: e.clientY });
+//       return;
+//     }
+
+//     // Handle dragging
+//     if (dragging) {
+//       const deltaX = e.clientX - dragging.startX;
+//       const deltaY = e.clientY - dragging.startY;
+
+//       setTextBoxes(prev => prev.map(box => {
+//         if (box.id !== dragging.id) return box;
+//         return {
+//           ...box,
+//           x: dragging.originalX + deltaX,
+//           y: dragging.originalY + deltaY
+//         };
+//       }));
+//     }
+//   };
+
+//   const handleMouseUp = () => {
+//     setResizing(null);
+//     setDragging(null);
+//   };
+
+//   const handleResizeStart = (e, id, direction) => {
+//     e.stopPropagation();
+//     const box = textBoxes.find(b => b.id === id);
+//     setResizing({ 
+//       id, 
+//       direction, 
+//       startX: e.clientX, 
+//       startY: e.clientY,
+//       originalWidth: box.width,
+//       originalHeight: box.height,
+//       originalX: box.x,
+//       originalY: box.y
+//     });
+//   };
+
+//   // Add event listeners for drag and resize
+//   useEffect(() => {
+//     if (resizing || dragging) {
+//       window.addEventListener('mousemove', handleMouseMove);
+//       window.addEventListener('mouseup', handleMouseUp);
+//       return () => {
+//         window.removeEventListener('mousemove', handleMouseMove);
+//         window.removeEventListener('mouseup', handleMouseUp);
+//       };
+//     }
+//   }, [resizing, dragging, textBoxes]);
+
+//   return (
+//     <div className="canvas-container">
+//       <Toolbar onViewChange={setViewMode}/>
+//       <div
+//         ref={containerRef}
+//         className="drawing-canvas-wrapper"
+//         onDoubleClick={handleDoubleClick}
+//         onClick={() => setSelectedBox(null)}
+//       >
+//         <div 
+//           className={`drawing-canvas ${viewMode}`}
+//           style={{
+//             width: `${canvasSize.width}px`,
+//             height: `${canvasSize.height}px`,
+//             position: 'relative'
+//           }}
+//         >
+//           {textBoxes.map(box => (
+//             <div
+//               key={box.id}
+//               className={`text-box ${selectedBox === box.id ? 'selected' : ''}`}
+//               style={{
+//                 position: 'absolute',
+//                 left: `${box.x}px`,
+//                 top: `${box.y}px`,
+//                 width: `${box.width}px`,
+//                 height: `${box.height}px`,
+//               }}
+//               onClick={(e) => {
+//                 e.stopPropagation();
+//                 setSelectedBox(box.id);
+//               }}
+//               onMouseDown={(e) => handleDragStart(e, box.id)}
+//             >
+//               <textarea
+//                 value={box.text}
+//                 onChange={(e) => handleTextChange(box.id, e.target.value)}
+//                 placeholder="Type here..."
+//                 className="text-box-input"
+//                 style={{
+//                   width: '100%',
+//                   height: '100%',
+//                 }}
+//               />
+              
+//               {selectedBox === box.id && (
+//                 <>
+//                   <div 
+//                     className="resize-handle se"
+//                     onMouseDown={(e) => handleResizeStart(e, box.id, 'se')}
+//                   />
+//                   <div 
+//                     className="resize-handle sw"
+//                     onMouseDown={(e) => handleResizeStart(e, box.id, 'sw')}
+//                   />
+//                   <div 
+//                     className="resize-handle ne"
+//                     onMouseDown={(e) => handleResizeStart(e, box.id, 'ne')}
+//                   />
+//                   <div 
+//                     className="resize-handle nw"
+//                     onMouseDown={(e) => handleResizeStart(e, box.id, 'nw')}
+//                   />
+//                 </>
+//               )}
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+// export default Canvas
+
+
+import { useRef, useState, useEffect } from 'react'
+import './Canvas.css'
+import Toolbar from '../Toolbar/Toolbar'
+import { useCanvasResize } from '../../Hooks/useCanvasResize'
+import { useTextBoxes } from '../../Hooks/useTextBoxes'
 
 const Canvas = () => {
+  const [viewMode, setViewMode] = useState('');
+  const containerRef = useRef(null);
+  
+  const {
+    textBoxes,
+    selectedBox,
+    setSelectedBox,
+    createTextBox,
+    updateTextBox,
+    deleteTextBox,
+    startDragging,
+    startResizing,
+  } = useTextBoxes();
+
+  const canvasSize = useCanvasResize(containerRef, textBoxes, 250);
+
+  const handleDoubleClick = (e) => {
+    e.stopPropagation()
+    const container = containerRef.current;
+    const rect = container.getBoundingClientRect();
+    
+    const clickX = e.clientX - rect.left + container.scrollLeft;
+    const clickY = e.clientY - rect.top + container.scrollTop;
+    
+    createTextBox(clickX, clickY);
+  };
+
+  const handleDragStart = (e, id) => {
+    if (e.target.tagName === 'TEXTAREA' || e.target.classList.contains('resize-handle')) {
+      return;
+    }
+    
+    e.stopPropagation();
+    startDragging(id, e.clientX, e.clientY);
+  };
+
+  const handleResizeStart = (e, id, direction) => {
+    e.stopPropagation();
+    startResizing(id, direction, e.clientX, e.clientY);
+  };
+
+  // Handle Delete key
+  const handleKeyDown = (e) => {
+    if (e.key === 'Delete' && selectedBox && !e.target.matches('textarea')) {
+      deleteTextBox(selectedBox);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedBox]);
+
   return (
-    <div >Canvas</div>
+    <div className="canvas-container">
+      <Toolbar onViewChange={setViewMode}/>
+      <div
+        ref={containerRef}
+        className="drawing-canvas-wrapper"
+        onDoubleClick={handleDoubleClick}
+        onClick={() => setSelectedBox(null)}
+      >
+        <div 
+          className={`drawing-canvas ${viewMode}`}
+          style={{
+            width: `${canvasSize.width}px`,
+            height: `${canvasSize.height}px`,
+            position: 'relative'
+          }}
+        >
+          {textBoxes.map(box => (
+            <div
+              key={box.id}
+              className={`text-box ${selectedBox === box.id ? 'selected' : ''}`}
+              style={{
+                position: 'absolute',
+                left: `${box.x}px`,
+                top: `${box.y}px`,
+                width: `${box.width}px`,
+                height: `${box.height}px`,
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedBox(box.id);
+              }}
+              onMouseDown={(e) => {
+                if (e.target.tagName === 'TEXTAREA') return;
+                handleDragStart(e, box.id);
+              }}
+            >
+              <textarea
+                value={box.text}
+                onChange={(e) => updateTextBox(box.id, e.target.value)}
+                placeholder="Type here..."
+                className="text-box-input"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                }}
+              />
+              
+              {selectedBox === box.id && (
+                <>
+                  <div 
+                    className="resize-handle se"
+                    onMouseDown={(e) => handleResizeStart(e, box.id, 'se')}
+                  />
+                  <div 
+                    className="resize-handle sw"
+                    onMouseDown={(e) => handleResizeStart(e, box.id, 'sw')}
+                  />
+                  <div 
+                    className="resize-handle ne"
+                    onMouseDown={(e) => handleResizeStart(e, box.id, 'ne')}
+                  />
+                  <div 
+                    className="resize-handle nw"
+                    onMouseDown={(e) => handleResizeStart(e, box.id, 'nw')}
+                  />
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
 

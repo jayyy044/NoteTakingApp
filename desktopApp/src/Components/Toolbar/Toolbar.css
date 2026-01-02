@@ -53,9 +53,12 @@
  */
 .toolbar {
     height: var(--toolbar-height);
-    background-color: var(--bg-toolbar);
+    background-color: var(--bg-lighter);
     color : white ;
     box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    border-bottom: 0.1px solid rgba(255, 255, 255, 0.139);
+    border-left: 0.1px solid rgba(255, 255, 255, 0.139);
+    border-radius: 5px;
     display: flex;
     align-items: center;
     padding-block: 5px;
@@ -148,7 +151,7 @@
 }
 
 .tool-btn:hover {
-  background-color: var(--bg-hover);
+  background-color: var(--bg-lighter-hover);
 }
 
 .tool-btn:active {
@@ -228,4 +231,37 @@
 
 .color-dropdown .ant-dropdown-menu-item:hover {
   background-color: transparent;
+}
+
+
+
+
+.tools-view{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.tools-view > *:nth-child(2) {
+  transform: rotate(90deg);
+}
+
+.tools-btn-view{
+    background-color: transparent;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding:6px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.tools-btn-view:hover{
+    background-color: var(--bg-lighter-hover);
+}
+
+.tools-btn-view:active{
+    background-color: #4a4a4a;
 }

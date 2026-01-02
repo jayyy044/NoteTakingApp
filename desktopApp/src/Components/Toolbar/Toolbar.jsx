@@ -9,6 +9,9 @@ import {
   MdFormatUnderlined, 
   MdStrikethroughS,
   MdFormatColorText,
+  MdOutlineCalendarViewWeek,
+  MdOutlineGridOn,
+  MdCheckBoxOutlineBlank 
 } from "react-icons/md";
 import { 
   BsListUl, 
@@ -16,13 +19,13 @@ import {
   BsTextLeft,
   BsTextCenter,
   BsTextRight,
-  BsJustify
+  BsJustify,
 } from "react-icons/bs";
 import { BiHighlight } from "react-icons/bi";
 
-const Toolbar = ({ currentTool, onToolChange}) => {
+const Toolbar = ({ currentTool, onToolChange, onViewChange}) => {
   const [selectedTool, setSelectedTool] = useState('Tools');
-  const [textColor, setTextColor] = useState('#000000');
+  const [textColor, setTextColor] = useState('#ffffffff');
   const [highlightColor, setHighlightColor] = useState('#ffffffff');
 
   const items = [
@@ -34,6 +37,10 @@ const Toolbar = ({ currentTool, onToolChange}) => {
       key: '2',
       label: 'Draw',
     },
+    {
+      key: '3',
+      label: 'View'
+    }
   ];
 
   const themeColors = [
@@ -252,6 +259,20 @@ const Toolbar = ({ currentTool, onToolChange}) => {
 
           <button className="tool-btn" onClick={() => onToolChange('Text')}>
             <BiText size={30} />
+          </button>
+        </div>
+      )}
+
+      {selectedTool === 'View' && (
+        <div className="tools-view">
+          <button className='tools-btn-view' onClick={() => onViewChange('')}>
+            <MdCheckBoxOutlineBlank size={35}/>
+          </button>    
+          <button className='tools-btn-view' onClick={() => onViewChange('lines')}>
+            <MdOutlineCalendarViewWeek size={30}/>
+          </button>
+          <button className='tools-btn-view' onClick={() => onViewChange('grid')}>
+            <MdOutlineGridOn size={30}/>
           </button>
         </div>
       )}

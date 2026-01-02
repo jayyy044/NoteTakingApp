@@ -17,7 +17,7 @@
   --sidebar-width-closed: 70px;
   
   /* Layout & Colors */
-  --toolbar-height: 68px;
+  --toolbar-height: 65px;
   --bg-dark: #1a1a1a;
   
   --bg-sidebar: #252525;
@@ -25,21 +25,18 @@
   --bg-canvas: #1e1e1e;
   --border-color: #3a3a3a;
 
-  --bg-hover:#3a3a3a;
 
-  --bb: rgb(68, 68, 68);
 
   /* Accents & Styles */
   --accent-primary: #336bfd;
   --accent-primary-hover: #4b7dfa;
-  --border-rm: 15px;
   --transition-normal: 0.3s ease;
   
   
   
-  --bg-color:rgb(22, 22, 22);
+  --bg-color:rgb(19, 19, 19);
   --bg-lighter:rgb(28, 28, 28);
-  --bg-lighter-hover: rgb(38, 38, 38);
+  --bg-lighter-hover: rgb(58, 58, 58);
 }
 
 /* 3. Global Reset */
