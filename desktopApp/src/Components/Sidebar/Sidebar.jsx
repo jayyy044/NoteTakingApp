@@ -9,9 +9,8 @@ import { CiFolderOn } from "react-icons/ci";
 import { FiFileText } from "react-icons/fi";
 
 
-const Sidebar = () => {
+const Sidebar = ({ contextMenu, setContextMenu}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [contextMenu, setContextMenu] = useState(null);
   const [rename, setRename] = useState({
     notebook: null,
     section: null,
@@ -43,50 +42,35 @@ const Sidebar = () => {
     e.preventDefault();
     e.stopPropagation();
 
-    // clamp position so menu doesn't overflow the window
     const menuWidth = 220, menuHeight = 200;
     const x = Math.min(e.clientX, window.innerWidth - menuWidth);
     const y = Math.min(e.clientY, window.innerHeight - menuHeight);
 
-    setContextMenu({ x, y, type, data });
+    setContextMenu({
+      x,
+      y,
+      type,
+      data,
+      source: 'sidebar'
+    });
   };
 
-  //On Sidebar
-  useEffect(() => {
-    const onDocClick = () => setContextMenu(null);
-    window.addEventListener('click', onDocClick);
-    window.addEventListener('blur', onDocClick);
-    return () => {
-      window.removeEventListener('click', onDocClick);
-      window.removeEventListener('blur', onDocClick);
-    };
-  }, []);
+  // Add this handler after your existing openContextMenu function
+  const handleSidebarEmptySpace = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  //Global Catcher
-  useEffect(() => {
-    const onContextMenuCapture = (e) => {
-      const inSidebar = e.target.closest?.('.sidebar');
-      const inCustomMenu = e.target.closest?.('.context-menu');
+    const menuWidth = 220, menuHeight = 200;
+    const x = Math.min(e.clientX, window.innerWidth - menuWidth);
+    const y = Math.min(e.clientY, window.innerHeight - menuHeight);
 
-      // Block native menu ONLY if:
-      // 1) Right-click is inside sidebar
-      // 2) OR right-click is on the custom context menu itself
-      if (inSidebar || inCustomMenu) {
-        e.preventDefault();
-        return;
-      }
-      // Otherwise:
-      // - If user right-clicks elsewhere, close our menu
-      // - Allow native browser menu
-      if (contextMenu) {
-        setContextMenu(null);
-      }
-    };
-    document.addEventListener('contextmenu', onContextMenuCapture, { capture: true });
-    return () => {
-      document.removeEventListener('contextmenu', onContextMenuCapture, { capture: true });
-    };
-  }, [contextMenu]);
+    setContextMenu({
+      x,
+      y,
+      type: 'sidebar-empty',
+      source: 'sidebar'
+    });
+  };
 
   const handleRename = (notebookId = null, sectionId = null, pageId = null, newName) => {
     if (notebookId && !sectionId && !pageId) {
@@ -129,7 +113,7 @@ const Sidebar = () => {
         </button>
       </div>
 
-      {contextMenu && (
+      {contextMenu && contextMenu.source === 'sidebar' && (
         <div
           className="context-menu"
           style={{
@@ -137,7 +121,16 @@ const Sidebar = () => {
             left: contextMenu.x,
             position: 'fixed'
           }}
-        >
+        > 
+          {contextMenu.type === 'sidebar-empty' && (
+            <div onClick={() => {
+              addNotebook();
+              setContextMenu(null);
+            }}>
+              Add Notebook
+            </div>
+          )}
+
           {contextMenu.type === 'notebook' && (
             <>
               <div onClick={() => addSection(contextMenu.data.id)}>Add Section</div>
@@ -180,7 +173,9 @@ const Sidebar = () => {
         </div>
       )}
 
-      <div className="notebooks-container">
+      <div className="notebooks-container"
+        onContextMenu={handleSidebarEmptySpace}
+      >
         {notebookData.map((notebook) => (
           <div key={notebook.id} className='notebook-cont'>
             <div className="notebook-item" 

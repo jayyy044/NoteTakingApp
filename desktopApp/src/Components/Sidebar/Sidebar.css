@@ -115,6 +115,10 @@
     color: var(--accent-primary-hover);
 }
 
+.notebooks-container{
+  flex: 1;
+}
+
 .notebook-item{
   display: flex;
   align-items: center;

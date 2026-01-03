@@ -1,15 +1,28 @@
-import React from 'react';
+import {useState} from 'react';
 import './Layout.css';
 import Sidebar from '../Sidebar/Sidebar.jsx';
-import Toolbar from '../Toolbar/Toolbar.jsx';
 import Canvas from '../Canvas/Canvas.jsx';
 
-const Layout = ({userData}) => {
+const Layout = () => {
+  const [contextMenu, setContextMenu] = useState(null);
   return (
-    <div className="layout">
-      <Sidebar notebookData={userData}/>
+    <div className="layout"
+      onClick={() => setContextMenu(null)}
+      onContextMenu={(e) => {
+        if (!e.target.closest('.context-menu')) {
+          setContextMenu(null);
+        }
+      }}
+    >
+      <Sidebar 
+        contextMenu={contextMenu}
+        setContextMenu={setContextMenu}
+      />
       <main className="layout-main">
-        <Canvas/>
+        <Canvas
+          contextMenu={contextMenu}
+          setContextMenu={setContextMenu}
+        />
       </main>
     </div>
   );
