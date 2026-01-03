@@ -61,8 +61,13 @@
   cursor: move; /* Shows move cursor when hovering over box border */
 }
 
+.text-box:hover{
+    border: 2px solid var(--accent-primary-hover);
+    box-shadow: 0 0 0 1px rgba(91, 155, 213, 0.3);
+}
+
 .text-box.selected {
-  border: 2px solid #5B9BD5;
+  border: 2px solid var(--accent-primary-hover);
   box-shadow: 0 0 0 1px rgba(91, 155, 213, 0.3);
 }
 
@@ -76,7 +81,7 @@
   color: white;
   padding: 8px;
   box-sizing: border-box;
-  cursor: text; /* Keep text cursor inside textarea */
+  cursor: text; 
 }
 
 .text-box-input::placeholder {
@@ -88,9 +93,9 @@
   width: 8px;
   height: 8px;
   background: white;
-  border: 1px solid #5B9BD5;
+  border: 1px solid var(--accent-primary-hover);
   box-sizing: border-box;
-  z-index: 10; /* Make sure handles are on top */
+  z-index: 10; 
 }
 
 .resize-handle.se {
@@ -115,4 +120,27 @@
   top: -4px;
   left: -4px;
   cursor: nw-resize;
+}
+
+
+.context-menu {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 4px 0;
+  min-width: 160px;
+}
+
+.context-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  color: white;
+}
+
+.context-item:hover {
+  background: #2a2a2a;
+}
+
+.context-item.danger {
+  color: #ff6b6b;
 }

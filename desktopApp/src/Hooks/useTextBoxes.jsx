@@ -145,6 +145,23 @@ export const useTextBoxes = () => {
         }
     };
 
+    const copyTextBox = (id) => {
+      const box = textBoxes.find(b => b.id === id);
+      if (!box) return null;
+
+      return {
+        ...box,
+        id: Date.now(),
+        x: box.x + 40,
+        y: box.y + 40
+      };
+    };
+
+    const pasteTextBox = (box) => {
+      setTextBoxes(prev => [...prev, box]);
+      setSelectedBox(box.id);
+    };
+
   // Handle mouse up
   const handleMouseUp = () => {
     setResizing(null);
@@ -174,5 +191,7 @@ export const useTextBoxes = () => {
     deleteTextBox,
     startDragging,
     startResizing,
+    copyTextBox,
+    pasteTextBox
   };
 };

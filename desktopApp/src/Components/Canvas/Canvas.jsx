@@ -950,7 +950,8 @@ import { useTextBoxes } from '../../Hooks/useTextBoxes'
 const Canvas = () => {
   const [viewMode, setViewMode] = useState('');
   const containerRef = useRef(null);
-  
+  const [contextMenu, setContextMenu] = useState(null);
+  const [clipboardBox, setClipboardBox] = useState(null);
   const {
     textBoxes,
     selectedBox,
@@ -960,6 +961,8 @@ const Canvas = () => {
     deleteTextBox,
     startDragging,
     startResizing,
+    copyTextBox,
+    pasteTextBox
   } = useTextBoxes();
 
   const canvasSize = useCanvasResize(containerRef, textBoxes, 250);
@@ -989,6 +992,19 @@ const Canvas = () => {
     startResizing(id, direction, e.clientX, e.clientY);
   };
 
+  const handleCanvasContextMenu = (e) => {
+    e.preventDefault();
+
+    const container = containerRef.current;
+    const rect = container.getBoundingClientRect();
+
+    setContextMenu({
+      x: e.clientX - rect.left + container.scrollLeft,
+      y: e.clientY - rect.top + container.scrollTop,
+      target: 'canvas',
+    });
+  };
+
   // Handle Delete key
   const handleKeyDown = (e) => {
     if (e.key === 'Delete' && selectedBox && !e.target.matches('textarea')) {
@@ -1008,7 +1024,11 @@ const Canvas = () => {
         ref={containerRef}
         className="drawing-canvas-wrapper"
         onDoubleClick={handleDoubleClick}
-        onClick={() => setSelectedBox(null)}
+        onClick={() => {
+          setSelectedBox(null)
+          setContextMenu(null)
+        }}
+        onContextMenu={handleCanvasContextMenu}
       >
         <div 
           className={`drawing-canvas ${viewMode}`}
@@ -1018,6 +1038,74 @@ const Canvas = () => {
             position: 'relative'
           }}
         >
+          {contextMenu && (
+            <div
+              className="context-menu"
+              style={{
+                position: 'absolute',
+                left: contextMenu.x,
+                top: contextMenu.y,
+                zIndex: 1000
+              }}
+            >
+              {contextMenu.target === 'canvas' && (
+                <>
+                  <div
+                    className="context-item"
+                    onClick={() => {
+                      createTextBox(contextMenu.x, contextMenu.y);
+                      setContextMenu(null);
+                    }}
+                  >
+                    Add Text Box
+                  </div>
+
+                  {clipboardBox && (
+                    <div
+                      className="context-item"
+                      onClick={() => {
+                        pasteTextBox({
+                          ...clipboardBox,
+                          id: Date.now(),
+                          x: contextMenu.x,
+                          y: contextMenu.y
+                        });
+                        setContextMenu(null);
+                      }}
+                    >
+                      Paste
+                    </div>
+                  )}
+                </>
+              )}
+
+              {contextMenu.target === 'box' && (
+                <>
+                  <div
+                    className="context-item"
+                    onClick={() => {
+                      const copied = copyTextBox(contextMenu.boxId);
+                      setClipboardBox(copied);
+                      setContextMenu(null);
+                    }}
+                  >
+                    Copy
+                  </div>
+
+                  <div
+                    className="context-item danger"
+                    onClick={() => {
+                      deleteTextBox(contextMenu.boxId);
+                      setContextMenu(null);
+                    }}
+                  >
+                    Delete
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
           {textBoxes.map(box => (
             <div
               key={box.id}
@@ -1036,6 +1124,20 @@ const Canvas = () => {
               onMouseDown={(e) => {
                 if (e.target.tagName === 'TEXTAREA') return;
                 handleDragStart(e, box.id);
+              }}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const container = containerRef.current;
+                const rect = container.getBoundingClientRect();
+
+                setContextMenu({
+                  x: e.clientX - rect.left + container.scrollLeft,
+                  y: e.clientY - rect.top + container.scrollTop,
+                  target: 'box',
+                  boxId: box.id
+                });
               }}
             >
               <textarea
