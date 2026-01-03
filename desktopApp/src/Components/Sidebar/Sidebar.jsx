@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import  { useState } from 'react';
 import './Sidebar.css';
 import { FiPlus } from "react-icons/fi";
 import { useNotebooks } from '../Context/NotebookContext.jsx';
@@ -7,9 +7,11 @@ import { IoBookOutline } from "react-icons/io5";
 import Loader from '../Loader/Loader.jsx';
 import { CiFolderOn } from "react-icons/ci";
 import { FiFileText } from "react-icons/fi";
+import Settings from '../Settings/SettingsPage.jsx';
+import { IoMdSettings } from "react-icons/io";
 
 
-const Sidebar = ({ contextMenu, setContextMenu}) => {
+const Sidebar = ({ contextMenu, setContextMenu, setSettingPage}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [rename, setRename] = useState({
     notebook: null,
@@ -179,7 +181,10 @@ const Sidebar = ({ contextMenu, setContextMenu}) => {
         {notebookData.map((notebook) => (
           <div key={notebook.id} className='notebook-cont'>
             <div className="notebook-item" 
-              onClick={() => toggleNotebook(notebook.id)}
+              onClick={() => {
+                toggleNotebook(notebook.id)
+                setSettingPage(false)
+              }}
               onContextMenu={(e) => openContextMenu(e, 'notebook', notebook)}>
               <span className={`notebook-item-chevron ${notebook.isExpanded ? 'expanded' : ''}`}>
                   <FaChevronRight />
@@ -216,7 +221,10 @@ const Sidebar = ({ contextMenu, setContextMenu}) => {
                 {notebook.sections.map((section) => (
                   <div key={section.id}>
                     <div className="section-header" 
-                      onClick={() => toggleSection(notebook.id, section.id)}
+                      onClick={() => {
+                        toggleSection(notebook.id, section.id)
+                        setSettingPage(false)
+                      }}
                       onContextMenu={(e) => openContextMenu(e, 'section', { notebookId : notebook.id, section})}
                       >
                       <span className={`section-chevron ${section.isExpanded ? 'expanded' : ''}`}>
@@ -256,7 +264,10 @@ const Sidebar = ({ contextMenu, setContextMenu}) => {
                           <div 
                             key={page.id} 
                             className={`page-item ${currentPageId === page.id ? 'selected' : ''}`}
-                            onClick={() => setCurrentPageId(page.id)}
+                            onClick={() => {
+                              setCurrentPageId(page.id)
+                              setSettingPage(false)
+                            }}
                             onContextMenu={(e) => openContextMenu(e, 'page', {notebookId: notebook.id, sectionId: section.id, page})}
                           >
                             <div className="page-item-content">
@@ -304,6 +315,13 @@ const Sidebar = ({ contextMenu, setContextMenu}) => {
           
         ))}
       </div> 
+
+      <div className="settings-container" onClick={() => setSettingPage(true)}>
+        <button className='settings-icon'>
+          <IoMdSettings size={23}/>
+        </button>
+        {isOpen && <span className="settings-text">Settings</span>}
+      </div>
     </div>
   );
 };

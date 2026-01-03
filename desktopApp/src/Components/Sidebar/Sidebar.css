@@ -313,3 +313,46 @@
 }
 
 
+
+.settings-icon{
+  background:none;
+  border: none;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.sidebar.closed .settings-container{
+  justify-content: center;
+}
+.settings-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  color: grey;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.settings-container:hover {
+  background-color: var(--bg-lighter-hover);
+  color: var(--accent-primary-hover);
+}
+
+.settings-container:hover .settings-icon{
+  color: var(--accent-primary-hover);
+}
+
+/* Closed sidebar behavior */
+.settings-container.collapsed {
+  justify-content: center;
+}
+
+.settings-text {
+  white-space: nowrap;
+}
+
+
+
