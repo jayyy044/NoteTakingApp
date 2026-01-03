@@ -1,0 +1,12 @@
+services:
+  app:
+    build: .
+    container_name: note-sync-server
+    ports:
+      - "3000:3000"  # Maps your local port 3000 to container's port 3000
+    volumes:
+      - ./:/app       # Syncs your local code with the container (for live reload)
+      - /app/node_modules  # Prevents overwriting container's node_modules
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
