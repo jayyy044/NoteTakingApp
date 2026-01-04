@@ -1,39 +1,38 @@
+require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
+const { initializeDatabase } = require('./db/setup');
+
+// Import routes
+const authRoutes = require('./routes/auth');
+const syncRoutes = require('./routes/sync');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware to parse JSON requests
+// Middleware
+app.use(cors());
 app.use(express.json());
 
-// A simple test route
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Your Note Sync Server is running! 🚀',
-    timestamp: new Date().toISOString(),
-    endpoints: {
-      health: '/health',
-      api: '/api'
-    }
-  });
-});
+// Initialize database on startup
+initializeDatabase();
 
-// Health check endpoint
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/sync', syncRoutes);
+
+// Health check
 app.get('/health', (req, res) => {
-  res.json({ status: 'healthy', serverTime: new Date().toISOString() });
+  res.json({ status: 'healthy', service: 'note-sync-server', timestamp: new Date().toISOString() });
 });
 
-// A placeholder for your future sync API
-app.post('/api/sync', (req, res) => {
-  console.log('Received sync data:', req.body);
-  // This is where your sync logic will go later
-  res.json({
-    status: 'received',
-    message: 'Sync endpoint - ready for your implementation',
-    receivedAt: new Date().toISOString()
-  });
-});
-
-// Start the server
+// Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`
+  ========================================
+  🚀 Note Sync Server is running!
+  Port: ${PORT}
+  Health: http://localhost:${PORT}/health
+  ========================================
+  `);
 });

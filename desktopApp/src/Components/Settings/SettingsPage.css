@@ -16,7 +16,7 @@
 }
 
 .back-btn{
-    font-size: 2rem;
+    font-size: 1.5rem;
     display: flex;
     align-items: center;
     background:none;
@@ -35,7 +35,28 @@
 }
 
 .settings-header p{
-    font-size: 3rem;
+    font-size: 2rem;
     margin-inline: auto;
 }
+
+.settings-content-cont{
+    border: 2px solid;
+    margin-top: 25px;
+    padding: 10px;
+}
+
+.settings-content-header p:nth-of-type(1) {
+    font-size: 1.7rem;
+    margin-bottom: 2px;
+    font-weight: 900;
+}
+
+.settings-content-header p:nth-of-type(2) {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: grey;
+}
+
+
+
 

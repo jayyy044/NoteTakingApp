@@ -1,12 +1,37 @@
 services:
+  # Your Node.js Application
   app:
     build: .
     container_name: note-sync-server
     ports:
-      - "3000:3000"  # Maps your local port 3000 to container's port 3000
+      - "3000:3000"
     volumes:
-      - ./:/app       # Syncs your local code with the container (for live reload)
-      - /app/node_modules  # Prevents overwriting container's node_modules
+      - ./:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development
+      - DB_USER=postgres
+      - DB_PASSWORD=password123
+      - DB_HOST=postgres
+      - DB_NAME=notes_cloud
+      - JWT_SECRET=5fb93c7d2599e947e27f4162c2ecef7a9cab375e523073367a84111927a5b400e1a50f89a35b5595cade773af33ddcc573be73216dc81cf24a77e7bebafccfcd
+    depends_on:
+      - postgres
     restart: unless-stopped
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: note-sync-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=notes_cloud
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

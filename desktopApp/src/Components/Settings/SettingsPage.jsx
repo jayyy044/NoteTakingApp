@@ -10,6 +10,16 @@ const SettingsPage = ({ setSettingPage }) => {
         </button>
         <p>Settings</p>
       </div>
+      <div className="settings-content-cont">
+        <div className="settings-content-header">
+          <p>Cloud Sync</p>
+          <p>Sync your data across all devices</p>
+        </div>
+        
+        <div className='settings-content'>
+
+        </div>
+      </div>
     </div>
   );
 };
